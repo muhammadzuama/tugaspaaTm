@@ -1,0 +1,411 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Ajax-Test</title> 
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/jquery.dataTables.min.css"/>
+	<script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+	<link rel="stylesheet" href="style.css">
+<script>
+  $(function() {
+    $('#btn_login').click(function(e) {
+		e.preventDefault();
+		v_data = 
+			{
+            "username": $("#username").val(),
+            "password":$("#password").val()
+			};
+			
+        $.ajax({
+            url: '/login_json',
+			data: JSON.stringify(v_data), 
+			processData: false,
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(response) {
+                console.log(response);
+                //~ $("#info_login").html( JSON.stringify(response['success']));
+				$("#view_login").hide();
+				if(JSON.stringify(response['berhasil']) == '1')
+				{
+					$("#view_user").show();
+					
+					$("#str_token").html(response['msg']);
+					
+					
+					//~ $('#example').DataTable( {
+						//~ data: response['msg'],
+						//~ columns: [
+							//~ { data: 'nama_user' },
+							//~ { data: 'password' },
+							//~ { data: 'id_person' },
+							//~ { data: 'kd_sts_aktif' }
+						//~ ]
+					//~ } );
+				}
+				else
+				{
+					alert(JSON.stringify(response['msg']));
+				}
+				
+				return false;
+            },
+            error: function(error) {
+                console.log(error);
+                $("#info_login").html(error['msg'].toString());
+				$("#view_login").show();
+				$("#view_user").show();
+				return false;
+            }
+        });
+    });
+});
+
+
+	function getUser()
+	{
+			$.ajax({
+			type: "POST",
+			url: "/protected",
+			headers: {
+				Authorization: 'Bearer ' + $("#str_token").html()
+			},
+			dataType: 'json',
+			success: function (result, status, xhr) {
+						console.log(result);
+				$("#login_as").html(result['logged_in_as'].toString());
+				
+			},
+			error: function (xhr, status, error) {
+				 alert(error);
+			}
+		});
+	}
+
+	function getUserData()
+	{
+			$.ajax({
+			type: "POST",
+			url: "/data_user",
+			headers: {
+				Authorization: 'Bearer ' + $("#str_token").html()
+			},
+			dataType: 'json',
+			success: function (result, status, xhr) {
+						console.log(result);
+				//$("#login_as").html(result['logged_in_as'].toString());
+				
+				
+					$('#example').DataTable( {
+						data: result['data_users'],
+						columns: [
+							{ data: 'id_person' },
+							{ data: 'nama_user' },
+							{ data: 'password' },
+							{ data: 'kd_sts_aktif' }
+						]
+					} );
+				
+			},
+			error: function (xhr, status, error) {
+				 alert(error);
+			}
+		});
+	}
+
+	// function getUserAllData()
+	// {
+	// 		$.ajax({
+	// 		type: "POST",
+	// 		url: "/data_all_user",
+	// 		headers: {
+	// 			Authorization: 'Bearer ' + $("#str_token").html()
+	// 		},
+	// 		dataType: 'json',
+	// 		success: function (result, status, xhr) {
+	// 					console.log(result);
+	// 			//$("#login_as").html(result['logged_in_as'].toString());
+				
+				
+	// 				$('#datall').DataTable( {
+	// 					data: result['data_all_user'],
+	// 					columns: [
+	// 						{ data: 'nama' },
+	// 						{ data: 'email' },
+	// 						{ data: 'no_hp' },
+	// 						{ data: 'alamat' }
+	// 					]
+	// 				} );
+				
+	// 		},
+	// 		error: function (xhr, status, error) {
+	// 			 alert(error);
+	// 		}
+	// 	});
+	// }
+</script>
+<body style="padding: 30px;">
+	
+	<div id="view_login">
+		<div class="card fat">
+			<div class="card-body">
+				<h4 class="card-title">Login</h4>
+				<form class="form-signin" action='/login' method="post" role="form">
+					<div class="form-group">
+						<label >Username</label>
+						<input type="text" name="username" id="username" class="form-control" placeholder="Username" required  autofocus>
+						<div class="invalid-feedback">
+							Email is invalid
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="password">Password</label>
+						<input type="password" name="password" id="password" class="form-control" placeholder="Password" required  data-eye>
+						<div class="invalid-feedback">
+							Password is required
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="custom-checkbox custom-control">
+							<input type="checkbox" name="remember" id="remember" class="custom-control-input">
+							<label for="remember" class="custom-control-label">Remember Me</label>
+						</div>
+					</div>
+					<div class="form-group m-0">
+						<button class="btn btn-lg btn-primary btn-block" id="btn_login" type="submit">
+							Login
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="view_user" style="display: none;">
+	<style>
+	#view_login {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	background-color: #f5f5f5;
+	}
+
+	h1 {
+	font-size: 3rem;
+	margin-bottom: 2rem;
+	}
+
+	.form-signin {
+	max-width: 330px;
+	padding: 15px;
+	margin: 0 auto;
+	}
+
+	.form-signin h2 {
+	margin-bottom: 1rem;
+	}
+
+	label {
+	display: none;
+	}
+
+	input[type="text"],
+	input[type="password"] {
+	height: 45px;
+	font-size: 1rem;
+	margin-bottom: 1rem;
+	padding: 10px;
+	border: none;
+	background-color: #fff;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+	}
+
+	input[type="text"]:focus,
+	input[type="password"]:focus {
+	outline: none;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	button[type="submit"] {
+	margin-top: 2rem;
+	height: 45px;
+	font-size: 1.25rem;
+	font-weight: bold;
+	border: none;
+	background-color: #007bff;
+	color: #fff;
+	}
+
+	button[type="submit"]:hover {
+	background-color: #14aa09;
+}
+	</style>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- <div class="token-label">Token:</div> -->
+				<div id='str_token' class="token-value" >
+				</div>
+				<button class="btn btn-lg btn-primary"  id="btn_get_id" onclick='getUser()'>Lihat User </button>
+				<div class="login-label">Hello </div>
+				<div id='login_as' class="login-value"></div>
+				<button class="btn btn-lg btn-primary" id="btn_get_data" onclick='getUserData()'>Data Status User</button>
+				<table id="example" class="table table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Username</th>
+							<th>Password</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+				</table>
+				<button class="btn btn-lg btn-primary" id="btn_get_data" onclick='getUserAllData()'>Data User</button>
+				<table id="datall" class="table table-hover">
+					<thead>
+					  <tr>
+						<th>Nama Lengkap</th>
+						<th>Email</th>
+						<th>NO Hp</th>
+						<th>Alamat</th>
+					  </tr>
+					</thead>
+					<tbody>
+						<script>
+							function getUserAllData() {
+							  $.ajax({
+								type: "POST",
+								url: "/data_all_user",
+								headers: {
+								  Authorization: 'Bearer ' + $("#str_token").html()
+								},
+								dataType: 'json',
+								success: function (result, status, xhr) {
+								  console.log(result);
+						  
+								  // hapus semua baris di dalam tbody
+								  $('#datall tbody').empty();
+						  
+								  // loop data user dan tambahkan ke dalam tabel
+								  $.each(result['data_all_user'], function (i, user) {
+									var row = '<tr>' +
+											  '<td>' + user.nama + '</td>' +
+											  '<td>' + user.email + '</td>' +
+											  '<td>' + user.no_hp + '</td>' +
+											  '<td>' + user.alamat + '</td>' +
+											  '</tr>';
+						  
+									$('#datall tbody').append(row);
+								  });
+						  
+								  // inisialisasi plugin DataTable
+								  $('#datall').DataTable({
+									// konfigurasi opsi DataTable bisa ditambahkan di sini
+								  });
+								},
+								error: function (xhr, status, error) {
+								  alert(error);
+								}
+							  });
+							}
+						  </script>
+					</tbody>
+				  </table>
+				  
+			</div>
+		</div>
+	</div>
+	
+	<style>
+		#str_token {
+	display: none;
+	}
+		.token-value {
+		display: none;
+		}
+		.container {
+			padding-top: 50px;
+		}
+	
+		.token-label,
+		.login-label {
+			font-weight: bold;
+			margin-top: 20px;
+		}
+	
+		.token-value,
+		.login-value {
+			border: 1px solid #ccc;
+			padding: 5px 10px;
+			margin-bottom: 20px;
+		}
+	
+		.btn {
+			margin-top: 10px;
+			width: 100%;
+		}
+	
+		@media (min-width: 768px) {
+			.col-md-12 {
+				max-width: 768px;
+				margin: 0 auto;
+			}
+		}
+	</style>
+</div>
+<style>
+	body {
+		background-color: #f8f9fa;
+	}
+	
+	h1, h2, h3, h4, h5, h6 {
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		font-weight: 600;
+	}
+	
+	.table-hover {
+		background-color: #fff;
+		border-collapse: collapse;
+	}
+	
+	.table-hover thead th {
+		background-color: #000000;
+		color: #fff;
+		font-weight: 600;
+		border: 1px solid #ccc;
+		text-align: center;
+		padding: 10px;
+		font-size: 14px;
+		text-transform: uppercase;
+	}
+	
+	.table-hover tbody td {
+		border: 1px solid #ccc;
+		text-align: center;
+		padding: 10px;
+		font-size: 14px;
+		color: #333;
+	}
+	
+	.table-hover tbody tr:nth-child(even) {
+		background-color: #f2f2f2;
+	}
+	
+	.table-hover tbody tr:hover {
+		background-color: #eaeaea;
+	}
+</style>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Halaman Profil</title>
+    <link rel="stylesheet" href="style.css">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #fff;
+			color: #000;
+			transition: background-color 0.5s ease;
+		}
+
+		.dark-mode {
+			background-color: #333;
+			color: #fff;
+		}
+
+		table {
+			width: 80%;
+			margin: auto;
+			border-collapse: collapse;
+			border: 1px solid #ddd;
+			background-color: #f2f2f2;
+		}
+
+		table td, table th {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		table th {
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		img {
+			display: block;
+			margin: auto;
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			transition: transform 0.5s ease;
+		}
+
+		img:hover {
+			transform: scale(1.1);
+		}
+
+		h1, h2 {
+			text-align: center;
+		}
+
+		p {
+			text-align: justify;
+			padding: 0 20%;
+		}
+
+		button {
+			background-color: #4CAF50;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			float: right;
+			margin: 20px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<img src="https://www.w3schools.com/w3images/avatar2.png" alt="Avatar" id="avatar">
+	<h1>Jane Doe</h1>
+	<h2>Front-end Developer</h2>
+
+	<table>
+		<tr>
+			<th colspan="2">Informasi Kontak</th>
+		</tr>
+		<tr>
+			<td>Email</td>
+			<td>jane.doe@gmail.com</td>
+		</tr>
+		<tr>
+			<td>Telepon</td>
+			<td>+1 123-456-7890</td>
+		</tr>
+		<tr>
+			<td>Alamat</td>
+			<td>Jl. Sudirman No. 123, Jakarta</td>
+		</tr>
+		<tr>
+			<th colspan="2">Pendidikan</th>
+		</tr>
+		<tr>
+			<td>SMA</td>
+			<td>SMAN 1 Jakarta</td>
+		</tr>
+		<tr>
+			<td>Sarjana</td>
+			<td>Universitas Indonesia</td>
+		</tr>
+		<tr>
+			<th colspan="2">Keahlian</th>
+		</tr>
+		<tr>
+			<td>HTML</td>
+			<td>90%</td>
+		</tr>
+		<tr>
+			<td>CSS</td>
+			<td>85%</td>
+		</tr>
+		<tr>
+			<td>JavaScript</td>
+			<td>80%</td>
+		</tr>
+	</table>
+
+	<p>Lorem... Ipsum dolor sit amet, consectetur adipiscing elit. Nullam aliquam, 
+        dolor vitae bibendum aliquam, tellus nisi fermentum nunc, a congue turpis tortor non augue. 
+        Sed a leo non augue pharetra accumsan. Pellentesque luctus sapien vel felis viverra, sit amet 
+        dictum odio eleifend. Ut eget orci vel ipsum dictum ultrices in eget sapien. Fusce aliquet elementum 
+        eleifend. Vivamus vel lectus vel eros bibendum euismod a quis magna. Nulla in velit vel lacus interdum 
+        semper. Nam pretium augue nec tincidunt suscipit. Sed a odio vel urna tincidunt auctor ac sed purus. Cras n
+        ec enim odio.
+    </p>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+<script>
+	function toggleDarkMode() {
+		document.body.classList.toggle("dark-mode");
+	}
+</script>
+
